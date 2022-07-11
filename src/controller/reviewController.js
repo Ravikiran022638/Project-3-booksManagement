@@ -28,7 +28,7 @@ const addReview = async function (req, res) {
 
         //validation for reviewedAt
         review.reviewedAt = moment().toISOString();
-
+  
         //validation for rating
         if (!Object.keys(review).includes("rating")) {
             return res.status(400).send({ status: false, message: "rating is missing." })
@@ -114,7 +114,7 @@ let updateReview = async function (req, res) {
         reviewsData: reviews
 
     }
-    res.status(200).send({ status: true, message: "succeed", data: bookWithReviews })
+    res.status(200).send({ status: true, message: "success", data: bookWithReviews })
 
 }
 
@@ -139,7 +139,7 @@ let deleteReview = async function (req, res) {
     }
 
     let deletedReview = await reviewModel.findOneAndUpdate({ _id: reviewId }, { isDeleted: true }, { new: true })
-    let noOfReviews = await (await reviewModel.find({ bookId: bookId, isDeleted: false })).length
+    let noOfReviews = await reviewModel.find({ bookId: bookId, isDeleted: false }).length
     let bookWithDeletedReviw = await bookModel.findOneAndUpdate({ _id: bookId }, { reviews: noOfReviews })
 
     res.status(200).send({ status: true, message: "deleted", data: deletedReview })
