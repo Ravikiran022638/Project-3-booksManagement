@@ -4,6 +4,7 @@ const reviewModel = require("../models/reviewModel");
 const validator = require("../validator/validator");
 const moment = require("moment")
 
+//--------------------------------post Api(create review)-------------------------------------------------------//
 
 const addReview = async function (req, res) {
     try {
@@ -49,10 +50,12 @@ const addReview = async function (req, res) {
     catch (err) {
         res.status(500).send({ status: false, message: err.message })
     }
-
 }
 
+//--------------------------------------------put api (update review)----------------------------------------------
+
 let updateReview = async function (req, res) {
+try {    
     let bookId = req.params.bookId
     let upreview = req.body
     if (!validator.isObjectId(bookId)) {
@@ -97,8 +100,7 @@ let updateReview = async function (req, res) {
             return res.status(400).send({ status: false, message: "rating should be between 1 to 5" })
         }
     }
-
-    await reviewModel.findOneAndUpdate({ _id: reviewId }, updateData, { new: true })
+    let updateddata = await reviewModel.findOneAndUpdate({ _id: reviewId }, updateData, { new: true })
     let bookWithReviews = {
         _id: book._id,
         title: book.title,
@@ -111,14 +113,19 @@ let updateReview = async function (req, res) {
         releasedAt: book.releasedAt,
         createdAt: book.createdAt,
         updatedAt: book.updatedAt,
-        reviewsData: reviews
-
+        reviewsData: updateddata
     }
-    res.status(200).send({ status: true, message: "success", data: bookWithReviews })
-
+    res.status(200).send({ status: true, message: "succeed", data: bookWithReviews })
+}
+catch (err) {
+    res.status(500).send({ status: false, message: err.message })
+}
 }
 
+//-----------------------------------------delete api(delete review)------------------------------------------------
+
 let deleteReview = async function (req, res) {
+try {
     let bookId = req.params.bookId
     if (!validator.isObjectId(bookId)) {
         return res.status(400).send({ status: false, message: "Enter a correct book ObjectId", })
@@ -143,6 +150,10 @@ let deleteReview = async function (req, res) {
     let bookWithDeletedReviw = await bookModel.findOneAndUpdate({ _id: bookId }, { reviews: noOfReviews })
 
     res.status(200).send({ status: true, message: "deleted", data: deletedReview })
+}
+catch (err) {
+    res.status(500).send({ status: false, message: err.message })
+}
 }
 
 module.exports.addReview = addReview

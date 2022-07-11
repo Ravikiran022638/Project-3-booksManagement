@@ -24,7 +24,7 @@ const createBooks = async function (req, res) {
             return res.status(400).send({ status: false, message: "title is invalid " });
         }
         if(await bookModel.findOne({title:bookData.title})){
-            return res.status(400).send({ status: false, message: "title should be unique." });
+            return res.status(400).send({ status: false, message: "title already present." });
  
         }
 
@@ -76,10 +76,6 @@ const createBooks = async function (req, res) {
                 .send({ status: false, message: "subcategory of book is required" });
 
         //validation for releasedAt
-        // if (!validator.isValid(bookData.releasedAt))
-        //     return res
-        //         .status(400)
-        //         .send({ status: false, message: "released Date of book is required" });
         bookData.releasedAt = moment().format("YYYY-MM-DD")
 
         let saveBooks = await bookModel.create(bookData);
