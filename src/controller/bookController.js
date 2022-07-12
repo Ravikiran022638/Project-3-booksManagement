@@ -115,7 +115,7 @@ const getBook = async function (req, res) {
                 return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
             });
             if (books.length == 0) return res.status(404).send({ status: false, message: "No data found." })
-            res.status(200).send({ status: true, message: "Book Data", data: books })
+            res.status(200).send({ status: true, message: "Book List", data: books })
         }
     } catch (error) {
         res.status(500).send({ status: false, Error: error.message });
@@ -139,16 +139,12 @@ const getBooksById = async (req, res) => {
 
         //if no book found
         if (!findbook)
-            return res.status(404).send({
-                status: false,
-                message: `no book found by this BookID: ${bookId}`,
-            });
+            return res.status(404).send({ status: false,message: `no book found by this BookID: ${bookId}`}
+            );
 
         //if that book is deleted
         if (findbook.isDeleted === true) {
-            return res
-                .status(404)
-                .send({ status: false, message: "Book already deleted!" });
+            return res.status(404).send({ status: false, message: "Book already deleted!" });
         }
 
         let reviews = await reviewModel.find({bookId:bookId})

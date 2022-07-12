@@ -2,7 +2,7 @@ const { isValidObjectId } = require("mongoose");
 const bookModel = require("../models/bookModel");
 const reviewModel = require("../models/reviewModel");
 const validator = require("../validator/validator");
-const moment = require("moment")
+const moment = require("moment");
 
 //--------------------------------post Api(create review)-------------------------------------------------------//
 
@@ -14,7 +14,6 @@ const addReview = async function (req, res) {
         }
         let book = await bookModel.findOne({ _id: bookId, isDeleted: false })
         if (!book) return res.status(404).send({ status: false, message: "This Book does not exist. Please enter correct Book ObjectId", })
-
 
         let review = req.body
         review.bookId = bookId
@@ -43,7 +42,7 @@ const addReview = async function (req, res) {
         }
         await reviewModel.create(review)
         let noOfReviews = await reviewModel.find({ bookId: bookId, isDeleted: false }).length
-        console.log(noOfReviews);
+
         bookUpdate = await bookModel.findOneAndUpdate({ _id: bookId }, { reviews: noOfReviews }, { new: true })
         res.status(200).send({ status: true, message: "Success", data: bookUpdate })
     }
@@ -115,7 +114,7 @@ try {
         updatedAt: book.updatedAt,
         reviewsData: updateddata
     }
-    res.status(200).send({ status: true, message: "succeed", data: bookWithReviews })
+    res.status(200).send({ status: true, message: "success", data: bookWithReviews })
 }
 catch (err) {
     res.status(500).send({ status: false, message: err.message })
@@ -142,7 +141,7 @@ try {
     if (!review) return res.status(404).send({ status: false, message: "This review does not exist. Please enter correct review ObjectId", })
 
     if (review.isDeleted === true) {
-        return res.status(404).send({ status: false, message: "This review does not exist.", })
+        return res.status(404).send({ status: false, message: "This review already deleted.", })
     }
 
     let deletedReview = await reviewModel.findOneAndUpdate({ _id: reviewId }, { isDeleted: true }, { new: true })
