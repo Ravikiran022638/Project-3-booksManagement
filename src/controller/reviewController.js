@@ -21,7 +21,7 @@ const addReview = async function (req, res) {
         if (!Object.keys(review).includes("reviewedBy")) {
             return res.status(400).send({ status: false, message: "reviewedBy is missing." })
         }
-        if (review.reviewedBy.trim() == "") {
+        if (review.reviewedBy.trim() == "" ) {
             return res.status(400).send({ status: false, message: "reviewedBy can't be empty." })
         }
 
