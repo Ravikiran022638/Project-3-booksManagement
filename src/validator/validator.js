@@ -4,11 +4,11 @@ let isBodyExist = function (Body) {
     if (Body === undefined || Object.keys(Body).length === 0) return true
 }
 
-const isValid = function (value) {
-    if (typeof value === "undefined" || value === null) return false;
-    if (typeof value === "string" && value.trim().length === 0) return false;
-    return true;
-};
+// const isPresent = function (value) {
+//     if (typeof value === "undefined" || value === null) return false;
+//     if (typeof value === "string" && value.trim().length === 0) return false;
+//     return true;
+// };
 
 let isObjectId = function (data) {
     return mongoose.Types.ObjectId.isValid (data)
@@ -16,6 +16,7 @@ let isObjectId = function (data) {
 
 let containNumbers = function (data) {
     if (/\d/.test(data)) return true
+    return false
 }
 
 let checkEmail = function (data) {
@@ -36,6 +37,6 @@ module.exports.isBodyExist = isBodyExist
 module.exports.isObjectId = isObjectId
 module.exports.containNumbers = containNumbers
 module.exports.checkEmail = checkEmail
-module.exports.isValid =isValid
+// module.exports.isValid =isValid
 module.exports.isValidMobile =isValidMobile
 module.exports.isValidObjectId =isValidObjectId

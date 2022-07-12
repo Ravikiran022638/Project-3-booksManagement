@@ -26,7 +26,7 @@ let userRegister = async function (req, res) {
         if (!userBody.title || userBody.title.trim() == "") {
             return res.status(400).send({ status: false, message: "Title can't be empty." })
         }
-        
+
         if (["Mr", "Mrs", "Miss"].indexOf(userBody.title) === -1) {
             return res.status(400).send({ status: false, message: "Title should be Mr,Mrs or Miss." })
         }
@@ -49,6 +49,9 @@ let userRegister = async function (req, res) {
         if (!Object.keys(userBody).includes("phone")) {
             return res.status(400).send({ status: false, message: "phone is missing." })
         }
+        if (typeof (userBody.phone) != "string") {
+            return res.status(400).send({ status: false, message: "phone should be in string." })
+        }
         if (userBody.phone.trim() == "") {
             return res.status(400).send({ status: false, message: "phone can't be empty." })
         }
@@ -60,6 +63,9 @@ let userRegister = async function (req, res) {
         //validation for email
         if (!Object.keys(userBody).includes("email")) {
             return res.status(400).send({ status: false, message: "email is missing." })
+        }
+        if (typeof (userBody.email) != "string") {
+            return res.status(400).send({ status: false, message: "email should be in string." })
         }
         if (userBody.email.trim() == "") {
             return res.status(400).send({ status: false, message: "email can't be empty." })
@@ -74,11 +80,55 @@ let userRegister = async function (req, res) {
         if (!Object.keys(userBody).includes("password")) {
             return res.status(400).send({ status: false, message: "password is missing." })
         }
+        if (typeof (userBody.password) != "string") {
+            return res.status(400).send({ status: false, message: "password should be in string." })
+        }
         if (userBody.password.trim() == "") {
             return res.status(400).send({ status: false, message: "password can't be empty." })
         }
         if (userBody.password.length > 15 || userBody.password.length < 8) {
             return res.status(400).send({ status: false, message: "password lenght should be between 8 and 15" })
+        }
+
+        //validation for address
+        if (userBody.address) {
+            if (typeof (userBody.address) != "object") {
+                return res.status(400).send({ status: false, message: "address should be in object." })
+
+            }
+            if (userBody.address.street == "") {
+                return res.status(400).send({ status: false, message: "street can't be empty." })
+            }
+            if (userBody.address.street) {
+                if (typeof (userBody.address.street) != "string") {
+                    return res.status(400).send({ status: false, message: "street should be in string." })
+                }
+                if (userBody.address.street.trim() == "") {
+                    return res.status(400).send({ status: false, message: "street can't be empty." })
+                }
+            }
+            if (userBody.address.city == "") {
+                return res.status(400).send({ status: false, message: "city can't be empty." })
+            }
+            if (userBody.address.city) {
+                if (typeof (userBody.address.city) != "string") {
+                    return res.status(400).send({ status: false, message: "city should be in string." })
+                }
+                if (userBody.address.city.trim() == "") {
+                    return res.status(400).send({ status: false, message: "city can't be empty." })
+                }
+            }
+            if (userBody.address.pincode == "") {
+                return res.status(400).send({ status: false, message: "pincode can't be empty." })
+            }
+            if (userBody.address.pincode) {
+                if (typeof (userBody.address.pincode) != "string") {
+                    return res.status(400).send({ status: false, message: "pincode should be in string." })
+                }
+                if (userBody.address.pincode.trim() == "") {
+                    return res.status(400).send({ status: false, message: "pincode can't be empty." })
+                }
+            }
         }
 
 
@@ -100,17 +150,17 @@ const userLogin = async function (req, res) {
 
 
         if (Object.keys(req.body).length == 0) {
-            return res.status(400).send({ status: false, msg: "Data is required" })
+            return res.status(400).send({ status: false, message: "Data is required" })
         }
         if (!userName) {
-            return res.status(400).send({ status: false, msg: "UserName is required" })
+            return res.status(400).send({ status: false, message: "UserName is required" })
         }
         if (!password) {
-            return res.status(400).send({ status: false, msg: "Password is required" })
+            return res.status(400).send({ status: false, message: "Password is required" })
         }
         let user = await userModel.findOne({ email: userName, password: password });
         if (!user) {
-            return res.status(401).send({ status: false, msg: "INVALID CREDENTIALS" });
+            return res.status(401).send({ status: false, message: "INVALID CREDENTIALS" });
         }
 
         let iat = Math.floor(Date.now() / 1000)
@@ -119,7 +169,13 @@ const userLogin = async function (req, res) {
         let token = jwt.sign(payload, "group63");
         res.setHeader("x-api-key", token);
 
-        res.send({ status: true, token: token });
+        res.status(201).send({
+            status: true,
+            message: 'Success',
+            data: {
+                token: token
+            }
+        });
 
     } catch (error) {
         res.status(500).send({ staus: false, msg: error.message })
