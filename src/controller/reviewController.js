@@ -150,8 +150,8 @@ let deleteReview = async function (req, res) {
         }
 
         let deletedReview = await reviewModel.findOneAndUpdate({ _id: reviewId }, { isDeleted: true }, { new: true })
-        let noOfReviews = await (await reviewModel.find({ bookId: bookId, isDeleted: false })).length
-        let bookWithDeletedReviw = await bookModel.findOneAndUpdate({ _id: bookId }, { reviews: noOfReviews })
+        let noOfReviews = await reviewModel.find({ bookId: bookId, isDeleted: false }).length
+        await bookModel.findOneAndUpdate({ _id: bookId }, { reviews: noOfReviews })
 
         res.status(200).send({ status: true, message: "deleted", data: deletedReview })
     } catch (err) {
