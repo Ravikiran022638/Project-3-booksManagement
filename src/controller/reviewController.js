@@ -87,7 +87,7 @@ try {
     let review = await reviewModel.findOne({ _id: reviewId, bookId: book._id, isDeleted: false })
     if (!review) return res.status(404).send({ status: false, message: "This review does not exist. Please enter correct review ObjectId", })
 
-    let reviews = await reviewModel.find({ bookId: bookId })
+    await reviewModel.find({ bookId: bookId })
 
     let updateData = req.body
     if (Object.keys(updateData).length === 0) {
@@ -146,7 +146,7 @@ try {
 
     let deletedReview = await reviewModel.findOneAndUpdate({ _id: reviewId }, { isDeleted: true }, { new: true })
     let noOfReviews = await reviewModel.find({ bookId: bookId, isDeleted: false }).length
-    let bookWithDeletedReviw = await bookModel.findOneAndUpdate({ _id: bookId }, { reviews: noOfReviews })
+     await bookModel.findOneAndUpdate({ _id: bookId }, { reviews: noOfReviews })
 
     res.status(200).send({ status: true, message: "deleted", data: deletedReview })
 }
