@@ -28,7 +28,7 @@ router.post("/books/:bookId/review",MW.authentication, review.addReview)
 
 router.put("/books/:bookId/review/:reviewId",MW.authentication, review.updateReview)
 
-router.delete("/books/:bookId/review/:reviewId",MW.authentication, review.deleteReview)     
+router.delete("/books/:bookId/review/:reviewId",MW.authentication, review.deleteReview)       
 
 
 router.all("/**",function(req,res){
