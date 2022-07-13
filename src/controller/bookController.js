@@ -155,7 +155,7 @@ const getBooksById = async (req, res) => {
 
         //If provided booikId is not valid!
         if (!validator.isObjectId(bookId)) {
-            return res.status(400).send({ status: true, message: "Enter valid bookId" });
+            return res.status(400).send({ status: false, message: "Enter valid bookId" });
         }
 
         //searching for book (document) with the bookId given by user
