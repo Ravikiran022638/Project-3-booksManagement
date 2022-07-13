@@ -82,6 +82,16 @@ let updateReview = async function (req, res) {
         if(upreview == undefined||Object.keys(upreview).length===0){
             return res.status(400).send({ status: false, message: "Please give some data to update" })
         }
+        let errorKeys = []
+        Object.keys(upreview).forEach(x => {
+            if(["review","rating","reviewedBy"].indexOf(x)==-1){
+                errorKeys.push(x)
+            }
+        })
+        if(errorKeys.length>=1){
+            return res.status(400).send({ status: false, message: `You can't change ${errorKeys.join(",")}` })
+        }
+
         if (upreview.review =="") {
             return res.status(400).send({ status: false, message: "review input can't be empty." })
         }

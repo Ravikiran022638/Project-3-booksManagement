@@ -145,20 +145,20 @@ let userRegister = async function (req, res) {
 
 const userLogin = async function (req, res) {
     try {
-        let userName = req.body.userName;
+        let email = req.body.email;
         let password = req.body.password;
 
 
         if (Object.keys(req.body).length == 0) {
             return res.status(400).send({ status: false, message: "Data is required" })
         }
-        if (!userName) {
-            return res.status(400).send({ status: false, message: "UserName is required" })
+        if (!email) {
+            return res.status(400).send({ status: false, message: "email is required" })
         }
         if (!password) {
             return res.status(400).send({ status: false, message: "Password is required" })
         }
-        let user = await userModel.findOne({ email: userName, password: password });
+        let user = await userModel.findOne({ email: email, password: password });
         if (!user) {
             return res.status(401).send({ status: false, message: "INVALID CREDENTIALS" });
         }
